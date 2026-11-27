@@ -1,0 +1,713 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missão Reciclagem</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 15px;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #d8f3dc, #74c69d);
+    color: #173b2b;
+    text-align: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 620px;
+    margin: 25px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px #0002;
+}
+
+h1 {
+    color: #238636;
+    font-size: clamp(25px, 5vw, 34px);
+}
+
+h2 {
+    color: #26734d;
+}
+
+p {
+    line-height: 1.5;
+}
+
+button {
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #e9f5ec;
+    color: #245c39;
+    min-height: 50px;
+    transition: 0.2s;
+    touch-action: manipulation;
+}
+
+button:hover {
+    transform: scale(1.03);
+    background: #b7e4c7;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.principal {
+    background: #238636;
+    color: white;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.creditos {
+    background: #e9f5ec;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.botoes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 25px;
+}
+
+#residuo {
+    font-size: clamp(60px, 15vw, 85px);
+    margin: 20px;
+}
+
+#nome {
+    font-size: 23px;
+    font-weight: bold;
+}
+
+#mensagem {
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    min-height: 55px;
+    line-height: 1.5;
+}
+
+#pontuacao {
+    color: #238636;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+#progresso {
+    color: #666;
+}
+
+.barra {
+    background: #e5e7eb;
+    height: 12px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+#preenchimento {
+    height: 100%;
+    width: 0%;
+    background: #238636;
+    transition: width 0.3s;
+}
+
+.escondido {
+    display: none !important;
+}
+
+.nivel-card {
+    padding: 15px;
+    margin: 12px 0;
+    background: #f0f7f1;
+    border-radius: 12px;
+}
+
+footer {
+    margin-top: 25px;
+    font-size: 13px;
+    color: #52715c;
+}
+
+@media (max-width: 400px) {
+    body {
+        padding: 8px;
+    }
+
+    .container {
+        padding: 18px 12px;
+    }
+
+    .botoes {
+        gap: 8px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- MENU -->
+
+<div id="menu" class="container">
+
+    <div style="font-size:75px;">🌍♻️</div>
+
+    <h1>MISSÃO RECICLAGEM</h1>
+
+    <h2>Pequenas atitudes, grandes mudanças!</h2>
+
+    <p>
+        Prepare-se para uma missão de sustentabilidade!
+        Separe os resíduos corretamente, aprenda a
+        reaproveitar materiais e avance pelos três níveis.
+    </p>
+
+    <button class="principal" onclick="iniciarJogo()">
+        ▶ JOGAR
+    </button>
+
+    <div class="creditos">
+
+        <h2>💻 Desenvolvedores</h2>
+
+        <p><strong>Yuri</strong> — Nº 39</p>
+        <p><strong>João Victor</strong> — Nº 15</p>
+
+        <h3>Turma: 1º D</h3>
+
+    </div>
+
+    <footer>
+        Projeto educativo sobre reciclagem e meio ambiente 🌱
+    </footer>
+
+</div>
+
+
+<!-- JOGO -->
+
+<div id="jogo" class="container escondido">
+
+    <h1>♻️ MISSÃO RECICLAGEM</h1>
+
+    <h2 id="tituloNivel">Nível 1 — Iniciante</h2>
+
+    <p id="descricaoNivel">Comece sua missão!</p>
+
+    <div class="barra">
+        <div id="preenchimento"></div>
+    </div>
+
+    <p id="progresso">Pergunta 1 de 5</p>
+
+    <p id="pontuacao">🏅 Pontos: 0</p>
+
+    <h2>Qual é o destino correto?</h2>
+
+    <div id="residuo">🧴</div>
+
+    <div id="nome">Garrafa PET</div>
+
+    <div class="botoes">
+
+        <button onclick="responder('Papel')">📄 Papel</button>
+
+        <button onclick="responder('Plástico')">🧴 Plástico</button>
+
+        <button onclick="responder('Vidro')">🫙 Vidro</button>
+
+        <button onclick="responder('Metal')">🥫 Metal</button>
+
+        <button onclick="responder('Orgânico')">🍃 Orgânico</button>
+
+    </div>
+
+    <div id="mensagem"></div>
+
+    <button id="proximo" class="principal escondido"
+    onclick="avancar()">
+        Próximo ➜
+    </button>
+
+</div>
+
+
+<!-- TRANSIÇÃO DE NÍVEL -->
+
+<div id="transicao" class="container escondido">
+
+    <div style="font-size:70px;">🏆</div>
+
+    <h1 id="tituloTransicao">Nível concluído!</h1>
+
+    <h2 id="pontuacaoNivel"></h2>
+
+    <p id="mensagemTransicao"></p>
+
+    <button class="principal" onclick="proximoNivel()">
+        Avançar de nível ➜
+    </button>
+
+</div>
+
+
+<!-- RESULTADO FINAL -->
+
+<div id="final" class="container escondido">
+
+    <div style="font-size:75px;">🏆</div>
+
+    <h1>MISSÃO CONCLUÍDA!</h1>
+
+    <h2 id="resultado"></h2>
+
+    <p id="dica"></p>
+
+    <div class="nivel-card">
+        <h3>📊 Seu desempenho</h3>
+        <p id="resultadoNivel1"></p>
+        <p id="resultadoNivel2"></p>
+        <p id="resultadoNivel3"></p>
+    </div>
+
+    <button class="principal" onclick="reiniciar()">
+        🔄 Jogar novamente
+    </button>
+
+    <button style="width:100%; margin-top:10px;"
+    onclick="voltarMenu()">
+        🏠 Voltar ao menu
+    </button>
+
+</div>
+
+
+<script>
+
+// PERGUNTAS DOS 3 NÍVEIS
+
+const niveis = [
+
+{
+titulo: "Nível 1 — Iniciante",
+descricao: "Identifique os resíduos mais comuns.",
+perguntas: [
+
+{
+nome: "Garrafa PET",
+emoji: "🧴",
+tipo: "Plástico",
+dica: "Pode ser reciclada ou transformada em um vaso de plantas."
+},
+
+{
+nome: "Jornal velho",
+emoji: "📰",
+tipo: "Papel",
+dica: "Pode ser reciclado e virar novas folhas de papel."
+},
+
+{
+nome: "Garrafa de vidro",
+emoji: "🍾",
+tipo: "Vidro",
+dica: "Pode ser reciclada e transformada em novas garrafas."
+},
+
+{
+nome: "Lata de refrigerante",
+emoji: "🥫",
+tipo: "Metal",
+dica: "O alumínio pode ser reciclado e virar novas latas."
+},
+
+{
+nome: "Casca de banana",
+emoji: "🍌",
+tipo: "Orgânico",
+dica: "Pode ser usada na compostagem para produzir adubo."
+}
+
+]
+},
+
+{
+titulo: "Nível 2 — Intermediário",
+descricao: "Agora você precisa prestar mais atenção!",
+perguntas: [
+
+{
+nome: "Embalagem de shampoo",
+emoji: "🧴",
+tipo: "Plástico",
+dica: "Depois de vazia e limpa, pode ser encaminhada para reciclagem."
+},
+
+{
+nome: "Folhas secas",
+emoji: "🍂",
+tipo: "Orgânico",
+dica: "Podem ser usadas na compostagem e na produção de adubo."
+},
+
+{
+nome: "Pote de conserva",
+emoji: "🫙",
+tipo: "Vidro",
+dica: "Pode ser reutilizado para guardar alimentos ou reciclado."
+},
+
+{
+nome: "Caixa de papelão",
+emoji: "📦",
+tipo: "Papel",
+dica: "Pode virar novas embalagens ou ser reutilizada para organização."
+},
+
+{
+nome: "Lata de milho",
+emoji: "🥫",
+tipo: "Metal",
+dica: "Pode ser reciclada ou transformada em um porta-lápis."
+}
+
+]
+},
+
+{
+titulo: "Nível 3 — Especialista",
+descricao: "Este é o desafio final! Pense bem antes de responder.",
+perguntas: [
+
+{
+nome: "Caixa de pizza limpa",
+emoji: "🍕",
+tipo: "Papel",
+dica: "A parte limpa pode ser reciclada. A parte engordurada não deve ir junto com o papel reciclável."
+},
+
+{
+nome: "Embalagem de detergente",
+emoji: "🧼",
+tipo: "Plástico",
+dica: "Depois de vazia e limpa, pode ser encaminhada para reciclagem."
+},
+
+{
+nome: "Pote de geleia",
+emoji: "🫙",
+tipo: "Vidro",
+dica: "Pode ser reutilizado para guardar pequenos objetos ou alimentos."
+},
+
+{
+nome: "Folha de caderno usada",
+emoji: "📄",
+tipo: "Papel",
+dica: "Pode ser reciclada e transformada em papel novo."
+},
+
+{
+nome: "Cascas de legumes",
+emoji: "🥕",
+tipo: "Orgânico",
+dica: "Podem ser transformadas em adubo por meio da compostagem."
+}
+
+]
+}
+];
+
+
+// VARIÁVEIS
+
+let nivelAtual = 0;
+let perguntaAtual = 0;
+let pontos = 0;
+let pontosNiveis = [0, 0, 0];
+let respondido = false;
+
+
+// INICIAR
+
+function iniciarJogo() {
+
+    document.getElementById("menu").classList.add("escondido");
+
+    document.getElementById("jogo").classList.remove("escondido");
+
+    mostrarPergunta();
+
+}
+
+
+// MOSTRAR PERGUNTA
+
+function mostrarPergunta() {
+
+    respondido = false;
+
+    const nivel = niveis[nivelAtual];
+
+    const pergunta = nivel.perguntas[perguntaAtual];
+
+    document.getElementById("tituloNivel").textContent =
+        nivel.titulo;
+
+    document.getElementById("descricaoNivel").textContent =
+        nivel.descricao;
+
+    document.getElementById("nome").textContent =
+        pergunta.nome;
+
+    document.getElementById("residuo").textContent =
+        pergunta.emoji;
+
+    document.getElementById("progresso").textContent =
+        "Pergunta " + (perguntaAtual + 1) + " de 5";
+
+    document.getElementById("pontuacao").textContent =
+        "🏅 Pontos: " + pontos + " / 150";
+
+    const totalPerguntas = nivelAtual * 5 + perguntaAtual;
+
+    document.getElementById("preenchimento").style.width =
+        (totalPerguntas / 15 * 100) + "%";
+
+    document.getElementById("mensagem").textContent = "";
+
+    document.getElementById("proximo").classList.add("escondido");
+
+    document.querySelectorAll(".botoes button").forEach(botao => {
+        botao.disabled = false;
+    });
+
+}
+
+
+// RESPONDER
+
+function responder(tipo) {
+
+    if (respondido) return;
+
+    respondido = true;
+
+    const pergunta = niveis[nivelAtual].perguntas[perguntaAtual];
+
+    const mensagem = document.getElementById("mensagem");
+
+    if (tipo === pergunta.tipo) {
+
+        pontos += 10;
+        pontosNiveis[nivelAtual] += 10;
+
+        mensagem.style.color = "green";
+
+        mensagem.textContent =
+            "✅ Resposta correta! " + pergunta.dica;
+
+    } else {
+
+        mensagem.style.color = "red";
+
+        mensagem.textContent =
+            "❌ Resposta incorreta! O correto é " +
+            pergunta.tipo + ". " + pergunta.dica;
+
+    }
+
+    document.getElementById("pontuacao").textContent =
+        "🏅 Pontos: " + pontos + " / 150";
+
+    document.querySelectorAll(".botoes button").forEach(botao => {
+        botao.disabled = true;
+    });
+
+    const botaoProximo = document.getElementById("proximo");
+
+    if (perguntaAtual === 4 && nivelAtual === 2) {
+        botaoProximo.textContent = "Ver resultado final 🏆";
+    } else if (perguntaAtual === 4) {
+        botaoProximo.textContent = "Concluir nível 🏆";
+    } else {
+        botaoProximo.textContent = "Próxima pergunta ➜";
+    }
+
+    botaoProximo.classList.remove("escondido");
+
+}
+
+
+// AVANÇAR
+
+function avancar() {
+
+    perguntaAtual++;
+
+    if (perguntaAtual < 5) {
+
+        mostrarPergunta();
+
+    } else {
+
+        if (nivelAtual < 2) {
+
+            mostrarTransicao();
+
+        } else {
+
+            terminarJogo();
+
+        }
+
+    }
+
+}
+
+
+// TRANSIÇÃO ENTRE NÍVEIS
+
+function mostrarTransicao() {
+
+    document.getElementById("jogo").classList.add("escondido");
+
+    document.getElementById("transicao").classList.remove("escondido");
+
+    document.getElementById("tituloTransicao").textContent =
+        "Nível " + (nivelAtual + 1) + " concluído!";
+
+    document.getElementById("pontuacaoNivel").textContent =
+        "Você fez " + pontosNiveis[nivelAtual] + " de 50 pontos.";
+
+    document.getElementById("mensagemTransicao").textContent =
+        "Prepare-se! O próximo nível será mais difícil. 🚀";
+
+}
+
+
+// PRÓXIMO NÍVEL
+
+function proximoNivel() {
+
+    nivelAtual++;
+
+    perguntaAtual = 0;
+
+    document.getElementById("transicao").classList.add("escondido");
+
+    document.getElementById("jogo").classList.remove("escondido");
+
+    mostrarPergunta();
+
+}
+
+
+// RESULTADO FINAL
+
+function terminarJogo() {
+
+    document.getElementById("jogo").classList.add("escondido");
+
+    document.getElementById("final").classList.remove("escondido");
+
+    document.getElementById("resultado").textContent =
+        "Sua pontuação: " + pontos + " de 150 pontos!";
+
+    let mensagem;
+
+    if (pontos === 150) {
+
+        mensagem = "🌟 Incrível! Você é um especialista em reciclagem!";
+
+    } else if (pontos >= 100) {
+
+        mensagem = "👏 Excelente! Você demonstrou muito conhecimento!";
+
+    } else if (pontos >= 60) {
+
+        mensagem = "🌱 Muito bem! Continue aprendendo sobre sustentabilidade!";
+
+    } else {
+
+        mensagem = "💚 Continue estudando! Cada aprendizado ajuda o planeta!";
+
+    }
+
+    document.getElementById("dica").textContent = mensagem;
+
+    document.getElementById("resultadoNivel1").textContent =
+        "Nível 1: " + pontosNiveis[0] + " / 50 pontos";
+
+    document.getElementById("resultadoNivel2").textContent =
+        "Nível 2: " + pontosNiveis[1] + " / 50 pontos";
+
+    document.getElementById("resultadoNivel3").textContent =
+        "Nível 3: " + pontosNiveis[2] + " / 50 pontos";
+
+}
+
+
+// REINICIAR
+
+function reiniciar() {
+
+    nivelAtual = 0;
+    perguntaAtual = 0;
+    pontos = 0;
+    pontosNiveis = [0, 0, 0];
+
+    document.getElementById("final").classList.add("escondido");
+
+    document.getElementById("jogo").classList.remove("escondido");
+
+    mostrarPergunta();
+
+}
+
+
+// VOLTAR AO MENU
+
+function voltarMenu() {
+
+    nivelAtual = 0;
+    perguntaAtual = 0;
+    pontos = 0;
+    pontosNiveis = [0, 0, 0];
+
+    document.getElementById("final").classList.add("escondido");
+
+    document.getElementById("menu").classList.remove("escondido");
+
+}
+
+</script>
+
+</body>
+  </html>
+  
